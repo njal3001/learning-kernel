@@ -1,49 +1,74 @@
 ; A 512 byte boot sector
 
-; Start address
-[org 0x7c00]
+[org 0x7c00] ; Start address
+[bits 16]
 
-; Initialize boot drive value
-mov [BOOT_DRIVE], dl
+CODE_SEG equ gdt_code - gdt_start
+DATA_SEG equ gdt_data - gdt_start
+
+cli ; Disable interrups
+lgdt [gdt_descriptor] ; Load GDT
+
+; Switch to 32 bit protected mode
+mov eax, cr0
+or eax, 1
+mov cr0, eax
+
+; Long jump to flush cpu pipeline of 16-bit instructions
+jmp CODE_SEG:start_protected_mode
+
+[bits 32]
+start_protected_mode:
 
 ; Initialize segment registers
-mov ax, cs
+mov ax, DATA_SEG
 mov ds, ax
 mov ss, ax
 mov es, ax
+mov fs, ax
+mov gs, ax
 
 ; Move stack pointer to safe address
-mov bp, 0x8000
-mov sp, bp
+mov ebp, 0x90000
+mov esp, ebp
 
-mov bx, ax
-call print_hex
+mov ebx, MSG_PM
+call print_string
 
-; Select drive
-mov dl, [BOOT_DRIVE]
-; Number of sectors to read
-mov dh, 1
-; Buffer address
-mov bx, 0x9000
-
-call disk_load
-
-mov bx, [0x9000]
-call print_hex
-
-; Infinite loop
-jmp $
+jmp $ ; Infinite loop
 
 %include "utils.asm"
 
-; Data
-BOOT_DRIVE: db 0
+MSG_PM: db "Switched to 32-bit protected mode!", 0
 
-; Pad with 0 until 510 bytes
-times 510-($-$$) db 0
+; GDT setup
+gdt_start:
+    ; Null descriptor
+    dd 0
+    dd 0
 
-; Magic boot number at end
-dw 0xaa55
+gdt_code:
+    dw 0xffff       ; Limit (bits 0-15)
+    dw 0            ; Base (bits 0-15)
+    db 0            ; Base (bits 16-23)
+    db 10011010b    ; Access byte
+    db 11001111b    ; Flags and Limit (bits 16-19)
+    db 0            ; Base (bits 24-31)
+    
+gdt_data:
+    dw 0xffff       ; Limit (bits 0-15)
+    dw 0            ; Base (bits 0-15)
+    db 0            ; Base (bits 16-23)
+    db 10010010b    ; Access byte
+    db 11001111b    ; Flags and Limit (bits 16-19)
+    db 0            ; Base (bits 24-31)
 
-times 256 dw 0xdada
-times 256 dw 0xface
+gdt_end:
+
+gdt_descriptor:
+    dw gdt_end - gdt_start - 1
+    dd gdt_start
+
+
+times 510-($-$$) db 0 ; Pad with 0 until 510 bytes
+dw 0xaa55 ; Magic boot number at end
