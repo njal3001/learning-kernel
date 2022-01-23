@@ -93,8 +93,10 @@ bios_print_string:
     popa
     ret
 
-; Input ;   dl: Selected drive ;   dh: Number of sectors to read
-;   bx: Buffer address pointer (es:bx)
+; Input 
+;   dl: Selected drive 
+;   dh: Number of sectors to read
+;   bx: Buffer pointer (es:bx)
 bios_disk_load:
     pusha
 
