@@ -53,17 +53,12 @@ mov gs, ax
 mov ebp, 0x90000
 mov esp, ebp
 
-mov eax, MSG_PM
-call print_string
-
-jmp $ ; Infinite loop
+jmp KERNEL_LOCATION
 
 %include "bios_utils.asm"
-%include "utils.asm"
 
 ; Data
 BOOT_DRIVE: db 0
-MSG_PM: db "Switched to 32-bit protected mode!", 0
 
 ; GDT setup
 gdt_start:
