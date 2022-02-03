@@ -21,11 +21,18 @@ mov sp, bp
 
 ; Load kernel
 mov dl, [BOOT_DRIVE]    ; Select drive
-mov dh, 2               ; Number of sectors to read
+mov dh, 20              ; Number of sectors to read
 mov bx, KERNEL_LOCATION ; Buffer pointer
 
 call bios_disk_load
 
+; Clear screen by changing to graphics mode 
+; and changing back to text mode
+mov ah, 0
+mov al, 0
+int 0x10
+mov al, 3
+int 0x10
 
 cli ; Disable interrups
 lgdt [gdt_descriptor] ; Load GDT

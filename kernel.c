@@ -1,19 +1,10 @@
-#define VMA 0xb8000
-
-void print_string(const char* s)
-{
-    char* vma = (char*)VMA;
-
-    while(*s)
-    {
-        *vma = *(s++);
-        vma += 2;
-    }
-}
+#include <stddef.h>
+#include "vga_text.h"
 
 int main()
 {
-    print_string("Hello kernel!");
+    vga_writestring("Hello kernel! This is my simple vga implementation!\n");
+    vga_writestring("Hello again!\n");
     return 0;
 }
 
