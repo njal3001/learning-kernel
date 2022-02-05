@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <stddef.h>
 
 enum vga_color {
 	VGA_COLOR_BLACK = 0,
@@ -20,7 +21,11 @@ enum vga_color {
 	VGA_COLOR_WHITE = 15,
 };
 
+void vga_clear();
 void vga_writechar(const char c);
 void vga_writestring(const char *s);
+void vga_writeint(int val, const size_t base);
 void vga_setcolor(const uint8_t co);
 void vga_setcolorfb(const enum vga_color fg, const enum vga_color bg);
+
+void vga_scrolldown(const size_t amount);
