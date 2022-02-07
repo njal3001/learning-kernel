@@ -62,7 +62,7 @@ mov esp, ebp
 
 jmp KERNEL_LOCATION
 
-%include "bios_utils.asm"
+%include "boot/bios_utils.asm"
 
 ; Data
 BOOT_DRIVE: db 0

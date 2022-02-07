@@ -21,11 +21,20 @@ enum vga_color {
 	VGA_COLOR_WHITE = 15,
 };
 
-void vga_clear();
+#define VGA_WIDTH 80
+#define VGA_HEIGHT 25
+
 void vga_writechar(const char c);
 void vga_writestring(const char *s);
 void vga_writeint(int val, const size_t base);
+
 void vga_setcolor(const uint8_t co);
 void vga_setcolorfb(const enum vga_color fg, const enum vga_color bg);
 
+void vga_clear();
 void vga_scrolldown(const size_t amount);
+
+// Cursor start and end scanline (0 to 15)
+void vga_enablecursor(const uint8_t start, const uint8_t end);
+void vga_disablecursor();
+void vga_updatecursor(const size_t x, const size_t y);

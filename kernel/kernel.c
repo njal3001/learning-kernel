@@ -1,5 +1,5 @@
 #include <stddef.h>
-#include "vga_text.h"
+#include "../drivers/vga_text.h"
 
 int main()
 {

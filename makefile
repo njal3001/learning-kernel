@@ -1,29 +1,39 @@
-run: build/pixelos.bin
-	qemu-system-x86_64 -drive format=raw,file=build/pixelos.bin 
+C_SRC = $(wildcard kernel/*.c drivers/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h)
 
-build/pixelos.bin: build/everything.bin build/zeroes.bin
-	cat build/everything.bin build/zeroes.bin > build/pixelos.bin
+C_FILE = $(notdir $(C_SRC))
+C_OBJ_TEMP = ${C_FILE:.c=.o}
+C_OBJ = $(addprefix $(BUILD)/, $(C_OBJ_TEMP))
 
-build/everything.bin: build/boot_sect.bin build/full_kernel.bin
-	cat build/boot_sect.bin build/full_kernel.bin > build/everything.bin
+BUILD := build
+KERNEL := kernel
+DRIVERS := drivers
+BOOT := boot
 
-build/full_kernel.bin: build/kernel_entry.o build/kernel.o build/vga_text.o build/utils.o
-	i386-elf-ld -o build/full_kernel.bin -Ttext 0x1000 build/kernel_entry.o build/kernel.o build/vga_text.o build/utils.o --oformat binary
+all: $(BUILD)/pixelos.bin
+	qemu-system-x86_64 -drive format=raw,file=$<
 
-build/kernel.o: kernel.c
-	i386-elf-gcc -ffreestanding -m32 -g -c kernel.c -o build/kernel.o
+$(BUILD)/pixelos.bin: $(BUILD)/everything.bin $(BUILD)/zeroes.bin
+	cat $^ > $@
 
-build/vga_text.o: vga_text.c
-	i386-elf-gcc -ffreestanding -m32 -g -c vga_text.c -o build/vga_text.o
+$(BUILD)/everything.bin: $(BUILD)/boot_sect.bin $(BUILD)/full_kernel.bin
+	cat $^ > $@
 
-build/utils.o: utils.c
-	i386-elf-gcc -ffreestanding -m32 -g -c utils.c -o build/utils.o
+$(BUILD)/full_kernel.bin: $(BUILD)/kernel_entry.o ${C_OBJ}
+	i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
-build/kernel_entry.o: kernel_entry.asm
-	nasm kernel_entry.asm -f elf -o build/kernel_entry.o
+$(BUILD)/%.o : $(KERNEL)/%.c ${HEADERS}
+	i386-elf-gcc -ffreestanding -m32 -g -c $< -o $@
+	
+$(BUILD)/%.o : $(DRIVERS)/%.c ${HEADERS}
+	i386-elf-gcc -ffreestanding -m32 -g -c $< -o $@
 
-build/boot_sect.bin: boot_sect.asm
-	nasm boot_sect.asm -f bin -o build/boot_sect.bin
+$(BUILD)/kernel_entry.o: kernel/kernel_entry.asm
+	nasm $^ -f elf -o $@
 
-build/zeroes.bin: zeroes.asm
-	nasm zeroes.asm -f bin -o build/zeroes.bin
+$(BUILD)/boot_sect.bin: boot/boot_sect.asm boot/bios_utils.asm
+	nasm $< -f bin -o $@
+
+$(BUILD)/zeroes.bin: boot/zeroes.asm
+	nasm $< -f bin -o $@
+

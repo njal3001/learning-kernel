@@ -1,10 +1,8 @@
 #include "vga_text.h"
-#include "utils.h"
+#include "../kernel/utils.h"
+#include "io_port.h"
 
 #define VMA 0xb8000
-
-#define VGA_WIDTH 80
-#define VGA_HEIGHT 25
 
 size_t x = 0; 
 size_t y = 0; 
@@ -71,7 +69,7 @@ void vga_writeint(int val, const size_t base)
     }
 
     // Store digits to be printed
-    int digits[10];
+    int digits[10]; // Harcoded max length
     size_t n_digits = 0;
 
     while (val != 0)
@@ -124,3 +122,30 @@ void vga_scrolldown(const size_t amount)
     memset16(dest, blank, clear_rows * VGA_WIDTH);
 }
 
+void vga_enablecursor(const uint8_t start, const uint8_t end)
+{
+    outb(0x3D4, 0x0A);
+    outb(0x3D5, start);
+ 
+	outb(0x3D4, 0x0B);
+	outb(0x3D5, end);
+}
+
+void vga_disablecursor()
+{
+    outb(0x3D4, 0x0A);
+    outb(0x3D5, 0x20);
+}
+
+void vga_updatecursor(const size_t x, const size_t y)
+{
+    const uint16_t pos = x + y * VGA_WIDTH;
+
+    // Send lowest byte of pos
+    outb(0x3D4, 0x0F);
+    outb(0x3D5, (uint8_t)(pos & 0xFF));
+
+    // Send highest byte of pos
+    outb(0x3D4, 0x0E);
+    outb(0x3D5, (uint8_t)(pos >> 8));
+}
