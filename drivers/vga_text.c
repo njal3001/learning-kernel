@@ -9,20 +9,20 @@ size_t y = 0;
 uint16_t *buffer = (uint16_t*)VMA;
 uint8_t color = VGA_COLOR_WHITE;
 
-static inline uint16_t vga_entry(const char ch, const uint8_t color)
+static inline uint16_t vga_entry(char ch, uint8_t color)
 {
     return ((uint16_t) ch) | ((uint16_t)(color << 8)); 
 }
 
 void vga_clear()
 {
-    const uint16_t blank = vga_entry(32, color);
+    uint16_t blank = vga_entry(32, color);
     void *dest = &buffer[0];
 
     memset16(dest, blank, VGA_WIDTH * VGA_WIDTH);
 }
 
-void vga_writechar(const char c)
+void vga_writechar(char c)
 {
     if (c == '\n')
     {
@@ -32,7 +32,7 @@ void vga_writechar(const char c)
     }
     else
     {
-        const size_t i = x + y * VGA_WIDTH; 
+        size_t i = x + y * VGA_WIDTH; 
         buffer[i] = vga_entry(c, color);
 
         if (++x == VGA_WIDTH) 
@@ -50,7 +50,7 @@ void vga_writestring(const char *s)
         vga_writechar(*(s++));
 }
 
-void vga_writeint(int val, const size_t base)
+void vga_writeint(int val, size_t base)
 {
     if (val == 0)
     {
@@ -75,7 +75,7 @@ void vga_writeint(int val, const size_t base)
     while (val != 0)
     {
         // Get least significant digit and right shift
-        const int res = val % base;
+        int res = val % base;
         val -= res;
         val /= base;
 
@@ -89,25 +89,25 @@ void vga_writeint(int val, const size_t base)
     }
 }
 
-void vga_setcolorfb(const enum vga_color fg, const enum vga_color bg)
+void vga_setcolorfb(enum vga_color fg, enum vga_color bg)
 {
     color = ((uint8_t)fg) | ((uint8_t)(bg << 4));
 }
 
-void vga_setcolor(const uint8_t co)
+void vga_setcolor(uint8_t co)
 {
     color = co;
 }
 
-void vga_scrolldown(const size_t amount)
+void vga_scrolldown(size_t amount)
 {
     // Number of rows to move
-    const size_t mov_rows = max(VGA_HEIGHT - amount, 0);
+    size_t mov_rows = max(VGA_HEIGHT - amount, 0);
 
     // Move lower part of buffer  
     if (mov_rows)
     {
-        const size_t i = amount * VGA_WIDTH;
+        size_t i = amount * VGA_WIDTH;
         void *src = &buffer[i];
         void *dest = &buffer[0];
 
@@ -115,14 +115,14 @@ void vga_scrolldown(const size_t amount)
     }
 
     // Clear rest of screen
-    const uint16_t blank = vga_entry(32, color);
-    const size_t clear_rows = VGA_HEIGHT - mov_rows;
+    uint16_t blank = vga_entry(32, color);
+    size_t clear_rows = VGA_HEIGHT - mov_rows;
     void *dest = &buffer[mov_rows * VGA_WIDTH];
 
     memset16(dest, blank, clear_rows * VGA_WIDTH);
 }
 
-void vga_enablecursor(const uint8_t start, const uint8_t end)
+void vga_enablecursor(uint8_t start, uint8_t end)
 {
     outb(0x3D4, 0x0A);
     outb(0x3D5, start);
@@ -137,9 +137,9 @@ void vga_disablecursor()
     outb(0x3D5, 0x20);
 }
 
-void vga_updatecursor(const size_t x, const size_t y)
+void vga_updatecursor(size_t x, size_t y)
 {
-    const uint16_t pos = x + y * VGA_WIDTH;
+    uint16_t pos = x + y * VGA_WIDTH;
 
     // Send lowest byte of pos
     outb(0x3D4, 0x0F);

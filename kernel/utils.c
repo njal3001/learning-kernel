@@ -11,7 +11,7 @@ size_t strlen(const char *s)
     return len;
 }
 
-void memcpy(void *dest, const void *src, const size_t n)
+void memcpy(void *dest, const void *src, size_t n)
 {
     char* d = dest;
     const char* s = src;
@@ -22,7 +22,7 @@ void memcpy(void *dest, const void *src, const size_t n)
     }
 }
 
-void memset16(void *dest, const uint16_t val, const size_t n)
+void memset16(void *dest, uint16_t val, size_t n)
 {
     uint16_t* d = dest;
 
@@ -32,7 +32,7 @@ void memset16(void *dest, const uint16_t val, const size_t n)
     }
 }
 
-int max(const int a, const int b)
+int max(int a, int b)
 {
     return a >= b ? a : b;
 }
