@@ -2,38 +2,41 @@ C_SRC = $(wildcard kernel/*.c drivers/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h)
 
 C_FILE = $(notdir $(C_SRC))
-C_OBJ_TEMP = ${C_FILE:.c=.o}
-C_OBJ = $(addprefix $(BUILD)/, $(C_OBJ_TEMP))
+C_OBJ = ${C_FILE:.c=.o}
 
-BUILD := build
 KERNEL := kernel
 DRIVERS := drivers
 BOOT := boot
 
-all: $(BUILD)/pixelos.bin
+all: pixelos.bin
+
+run: pixelos.bin
 	qemu-system-x86_64 -drive format=raw,file=$<
 
-$(BUILD)/pixelos.bin: $(BUILD)/everything.bin $(BUILD)/zeroes.bin
+clean:
+	rm *.o *.bin
+
+pixelos.bin: everything.bin zeroes.bin
 	cat $^ > $@
 
-$(BUILD)/everything.bin: $(BUILD)/boot_sect.bin $(BUILD)/full_kernel.bin
+everything.bin: boot_sect.bin full_kernel.bin
 	cat $^ > $@
 
-$(BUILD)/full_kernel.bin: $(BUILD)/kernel_entry.o ${C_OBJ}
-	i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
+full_kernel.bin: kernel_entry.o ${C_OBJ}
+	i686-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
-$(BUILD)/%.o : $(KERNEL)/%.c ${HEADERS}
-	i386-elf-gcc -ffreestanding -m32 -g -c $< -o $@
+%.o : $(KERNEL)/%.c ${HEADERS}
+	i686-elf-gcc -ffreestanding -m32 -g -c $< -o $@
 	
-$(BUILD)/%.o : $(DRIVERS)/%.c ${HEADERS}
-	i386-elf-gcc -ffreestanding -m32 -g -c $< -o $@
+%.o : $(DRIVERS)/%.c ${HEADERS}
+	i686-elf-gcc -ffreestanding -m32 -g -c $< -o $@
 
-$(BUILD)/kernel_entry.o: kernel/kernel_entry.asm
+kernel_entry.o: ${KERNEL}/kernel_entry.asm
 	nasm $^ -f elf -o $@
 
-$(BUILD)/boot_sect.bin: boot/boot_sect.asm boot/bios_utils.asm
+boot_sect.bin: ${BOOT}/boot_sect.asm boot/bios_utils.asm
 	nasm $< -f bin -o $@
 
-$(BUILD)/zeroes.bin: boot/zeroes.asm
+zeroes.bin: ${BOOT}/zeroes.asm
 	nasm $< -f bin -o $@
 
