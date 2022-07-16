@@ -1,12 +1,14 @@
-C_SRC = $(wildcard kernel/*.c drivers/*.c)
-HEADERS = $(wildcard kernel/*.h drivers/*.h)
-
-C_FILE = $(notdir $(C_SRC))
-C_OBJ = ${C_FILE:.c=.o}
-
 KERNEL := kernel
 DRIVERS := drivers
 BOOT := boot
+UTILS := utils
+
+C_SRC = $(wildcard ${KERNEL}/*.c ${DRIVERS}/*.c ${UTILS}/*.c)
+UTILS_HEADERS = $(wildcard ${UTILS}/*.h)
+HEADERS = ${UTILS_HEADERS} $(wildcard ${KERNEL}/*.h ${DRIVERS}/*.h)
+
+C_FILE = $(notdir $(C_SRC))
+C_OBJ = ${C_FILE:.c=.o}
 
 all: pixelos.bin
 
@@ -28,7 +30,10 @@ full_kernel.bin: kernel_entry.o ${C_OBJ}
 %.o : $(KERNEL)/%.c ${HEADERS}
 	i686-elf-gcc -ffreestanding -m32 -g -c $< -o $@
 	
-%.o : $(DRIVERS)/%.c ${HEADERS}
+%.o : $(DRIVERS)/%.c ${UTILS_HEADERS}
+	i686-elf-gcc -ffreestanding -m32 -g -c $< -o $@
+
+%.o : $(UTILS)/%.c
 	i686-elf-gcc -ffreestanding -m32 -g -c $< -o $@
 
 kernel_entry.o: ${KERNEL}/kernel_entry.asm

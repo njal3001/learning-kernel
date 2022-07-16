@@ -1,5 +1,6 @@
 #include "vga_text.h"
-#include "../kernel/utils.h"
+#include "../utils/mem.h"
+#include "../utils/math.h"
 #include "io_port.h"
 
 #define VMA 0xb8000

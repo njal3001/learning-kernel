@@ -1,15 +1,4 @@
-#include "utils.h"
-
-size_t strlen(const char *s)
-{
-    size_t len = 0;
-    while (s[len])
-    {
-        len++;
-    }
-
-    return len;
-}
+#include "mem.h"
 
 void memcpy(void *dest, const void *src, size_t n)
 {
@@ -30,9 +19,4 @@ void memset16(void *dest, uint16_t val, size_t n)
     {
         d[i] = val;
     }
-}
-
-int max(int a, int b)
-{
-    return a >= b ? a : b;
 }
