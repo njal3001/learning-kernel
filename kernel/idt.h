@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <stddef.h>
 
 struct idt_entry
 {
@@ -16,4 +17,9 @@ struct idt_descriptor
     struct idt_entry *idt;
 } __attribute__((packed));
 
-extern void idt_load();
+#define IDT_CODE_SELECTOR 0x8
+#define IDT_GATE_INTERRUPT_FLAGS 0x8E
+#define IDT_GATE_TRAP_FLAGS 0x8F
+#define IDT_GATE_TASK_FLAGS 0x85
+
+void idt_initialize();
