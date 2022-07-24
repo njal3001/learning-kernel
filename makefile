@@ -26,7 +26,7 @@ pixelos.bin: everything.bin zeroes.bin
 everything.bin: boot_sect.bin full_kernel.bin
 	cat $^ > $@
 
-full_kernel.bin: kernel_entry.o interrupt.o ${C_OBJ}
+full_kernel.bin: kernel_entry.o interrupt_asm.o ${C_OBJ}
 	${TARGET}-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
 %.o : $(KERNEL)/%.c ${HEADERS}
@@ -38,7 +38,7 @@ full_kernel.bin: kernel_entry.o interrupt.o ${C_OBJ}
 %.o : $(UTILS)/%.c
 	${TARGET}-gcc -ffreestanding -m32 -g -c $< -o $@
 
-interrupt.o: ${KERNEL}/interrupt.asm
+interrupt_asm.o: ${KERNEL}/interrupt.asm
 	nasm $^ -f elf -o $@
 
 kernel_entry.o: ${KERNEL}/kernel_entry.asm

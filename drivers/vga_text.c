@@ -28,8 +28,7 @@ void vga_writechar(char c)
     if (c == '\n')
     {
         x = 0;
-        if (++y == VGA_HEIGHT)
-            y = 0;
+        y++;
     }
     else
     {
@@ -39,10 +38,17 @@ void vga_writechar(char c)
         if (++x == VGA_WIDTH) 
         {
             x = 0;
-            if (++y == VGA_HEIGHT)
-                y = 0;
+            y++;
         }
     }
+
+    if (y == VGA_HEIGHT)
+    {
+        vga_scrolldown(1);
+        y--;
+    }
+
+    vga_updatecursor(x, y);
 }
 
 void vga_writestring(const char *s)

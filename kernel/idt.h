@@ -22,4 +22,5 @@ struct idt_descriptor
 #define IDT_GATE_TRAP_FLAGS 0x8F
 #define IDT_GATE_TASK_FLAGS 0x85
 
-void idt_initialize();
+extern void idt_load();
+void idt_set_gate(size_t index, uint32_t offset, uint16_t selector, uint8_t flags);
