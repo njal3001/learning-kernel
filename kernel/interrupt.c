@@ -36,6 +36,7 @@ extern void isr29();
 extern void isr30();
 extern void isr31();
 
+extern void timer_interrupt_wrapper();
 extern void keyboard_interrupt_wrapper();
 
 void init_interrupts()
@@ -78,10 +79,12 @@ void init_interrupts()
 
     // Hardware interrupts
     pic_remap();
+
+    idt_set_gate(0x20, (uint32_t)timer_interrupt_wrapper, IDT_CODE_SELECTOR, IDT_GATE_INTERRUPT_FLAGS);
     idt_set_gate(0x21, (uint32_t)keyboard_interrupt_wrapper, IDT_CODE_SELECTOR, IDT_GATE_INTERRUPT_FLAGS);
 
-    // Only allow keyboard interrupts
-    irq_set_mask(0xFD);
+    // Only allow timer and keyboard interrupts
+    irq_set_mask(0xFC);
 
     // Enable interrupts
     asm volatile ("sti");

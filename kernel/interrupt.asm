@@ -1,13 +1,23 @@
 [bits 32]
 
 global idt_load
+global timer_interrupt_wrapper
 global keyboard_interrupt_wrapper
+
 extern idt_descriptor
+extern timer_interrupt_handler
 extern keyboard_interrupt_handler
 
 idt_load:
     lidt [idt_descriptor]
     ret
+
+timer_interrupt_wrapper:
+    pushad
+    cld
+    call timer_interrupt_handler
+    popad
+    iret
 
 keyboard_interrupt_wrapper:
     pushad
