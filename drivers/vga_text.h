@@ -21,12 +21,19 @@ enum vga_color {
 	VGA_COLOR_WHITE = 15,
 };
 
+enum num_format {
+    FORMAT_BIN,
+    FORMAT_OCT,
+    FORMAT_DEC,
+    FORMAT_HEX,
+};
+
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
 
 void vga_writechar(char c);
 void vga_writestring(const char *s);
-void vga_writeint(int val, size_t base);
+void vga_writeint(int val, enum num_format format);
 
 void vga_setcolor(uint8_t co);
 void vga_setcolorfb(enum vga_color fg, enum vga_color bg);

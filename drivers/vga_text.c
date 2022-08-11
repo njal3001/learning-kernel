@@ -57,13 +57,45 @@ void vga_writestring(const char *s)
         vga_writechar(*(s++));
 }
 
-void vga_writeint(int val, size_t base)
+void vga_writeint(int val, enum  num_format format)
 {
     if (val == 0)
     {
         // Print zero and end early
         vga_writechar(48);
         return;
+    }
+
+    size_t base;
+    char prefix[2];
+    size_t prefix_length = 0;
+
+    switch (format)
+    {
+        case FORMAT_BIN:
+            base = 2;
+            prefix[0] = '0';
+            prefix[1] = 'b';
+            prefix_length = 2;
+            break;
+        case FORMAT_OCT:
+            base = 8;
+            prefix[0] = '0';
+            prefix_length = 1;
+            break;
+        case FORMAT_DEC:
+            base = 10;
+            prefix_length = 0;
+            break;
+        case FORMAT_HEX:
+            base = 16;
+            prefix[0] = '0';
+            prefix[1] = 'x';
+            prefix_length = 2;
+            break;
+        default:
+            // TODO: Throw error
+           break; 
     }
 
     if (val < 0)
@@ -75,8 +107,14 @@ void vga_writeint(int val, size_t base)
         val = -val;
     }
 
+    // Print prefix
+    for (size_t i = 0; i < prefix_length; i++)
+    {
+        vga_writechar(prefix[i]);
+    }
+
     // Store digits to be printed
-    int digits[10]; // Harcoded max length
+    int digits[100];
     size_t n_digits = 0;
 
     while (val != 0)
@@ -92,7 +130,12 @@ void vga_writeint(int val, size_t base)
     // Print the digits
     for (int i = n_digits - 1; i >= 0; i--)
     {
-        vga_writechar(48 + digits[i]);
+        int digit = digits[i];
+
+        char ch = digit + 48;
+        if (digit > 9) ch += 7;
+
+        vga_writechar(ch);
     }
 }
 
