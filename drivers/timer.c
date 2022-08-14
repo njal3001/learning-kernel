@@ -2,7 +2,7 @@
 #include "vga_text.h"
 #include "pic.h" 
 
-uint32_t ticks = 0;
+volatile uint32_t ticks = 0;
 
 void timer_interrupt_handler()
 {

@@ -126,10 +126,39 @@ const char *exception_messages[32] =
     "Reserved",
 };
 
-void isr_handler(uint8_t fault_index)
+void isr_handler(struct interrupt_info info)
 {
-    vga_writestring(exception_messages[fault_index]);
+    vga_writestring(exception_messages[info.fault_index]);
     vga_writestring(" Exception. System Halted!\n");
+
+    // Print register contents
+    // TODO: Should print unsigned
+    vga_writestring("\nRegisters:\n");
+    vga_writestring("\ngs: ");
+    vga_writeint(info.gs, FORMAT_HEX);
+    vga_writestring("\nfs: ");
+    vga_writeint(info.fs, FORMAT_HEX);
+    vga_writestring("\nes: ");
+    vga_writeint(info.es, FORMAT_HEX);
+    vga_writestring("\nds: ");
+    vga_writeint(info.ds, FORMAT_HEX);
+    vga_writestring("\nedi: ");
+    vga_writeint(info.edi, FORMAT_HEX);
+    vga_writestring("\nesi: ");
+    vga_writeint(info.esi, FORMAT_HEX);
+    vga_writestring("\nebp: ");
+    vga_writeint(info.ebp, FORMAT_HEX);
+    vga_writestring("\nebx: ");
+    vga_writeint(info.ebx, FORMAT_HEX);
+    vga_writestring("\nesp: ");
+    vga_writeint(info.esp, FORMAT_HEX);
+    vga_writestring("\nedx: ");
+    vga_writeint(info.edx, FORMAT_HEX);
+    vga_writestring("\necx: ");
+    vga_writeint(info.ecx, FORMAT_HEX);
+    vga_writestring("\neax: ");
+    vga_writeint(info.eax, FORMAT_HEX);
+
     for (;;)
     {
         asm ("hlt");

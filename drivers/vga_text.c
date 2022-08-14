@@ -67,7 +67,7 @@ void vga_writeint(int val, enum  num_format format)
     }
 
     size_t base;
-    char prefix[2];
+    char prefix[2] = {0};
     size_t prefix_length = 0;
 
     switch (format)

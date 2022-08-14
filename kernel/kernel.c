@@ -10,7 +10,7 @@ int main()
 
     for (;;)
     {
-        asm ("hlt");
+        asm volatile ("hlt");
     }
 
     return 0;

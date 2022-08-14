@@ -63,192 +63,704 @@ extern isr_handler
 
 isr0:
     cli
-    push byte 0
+
+    push 0 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr1:
     cli
-    push byte 1
+
+    push 1 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr2:
     cli
-    push byte 2
+
+    push 2 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr3:
     cli
-    push byte 3
+
+    push 3 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr4:
     cli
-    push byte 4
+
+    push 4 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr5:
     cli
-    push byte 5
+
+    push 5 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr6:
     cli
-    push byte 6
+
+    push 6 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr7:
     cli
-    push byte 7
+
+    push 7 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr8:
     cli
-    push byte 8
+
+    push 8 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr9:
     cli
-    push byte 9
+
+    push 9 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr10:
     cli
-    push byte 10
+
+    push 10 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr11:
     cli
-    push byte 11
+
+    push 11 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr12:
     cli
-    push byte 12
+
+    push 12 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr13:
     cli
-    push byte 13
+
+    push 13 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr14:
     cli
-    push byte 14
+
+    push 14 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr15:
     cli
-    push byte 15
+
+    push 15 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr16:
     cli
-    push byte 16
+
+    push 16 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr17:
     cli
-    push byte 17
+
+    push 17 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr18:
     cli
-    push byte 18
+
+    push 18 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr19:
     cli
-    push byte 19
+
+    push 19 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr20:
     cli
-    push byte 20
+
+    push 20 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr21:
     cli
-    push byte 21
+
+    push 21 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr22:
     cli
-    push byte 22
+
+    push 22 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr23:
     cli
-    push byte 23
+
+    push 23 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr24:
     cli
-    push byte 24
+
+    push 24 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr25:
     cli
-    push byte 25
+
+    push 25 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr26:
     cli
-    push byte 26
+
+    push 26 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr27:
     cli
-    push byte 27
+
+    push 27 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr28:
     cli
-    push byte 28
+
+    push 28 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr29:
     cli
-    push byte 29
+
+    push 29 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr30:
     cli
-    push byte 30
+
+    push 30 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
 
 isr31:
     cli
-    push byte 31
+
+    push 31 ; Fault index
+    pusha ; General purpose registers
+
+    ; Segment registers
+    push ds
+    push es
+    push fs
+    push gs
+
     call isr_handler
+
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popa
+
     iret
