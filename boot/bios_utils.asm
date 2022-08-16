@@ -149,8 +149,10 @@ bios_disk_load:
 ;   ax: Entry count, 0 if error
 bios_get_mmap:
     xor bp, bp ; Entry counter
+
+    ; Get first entry
     xor ebx, ebx
-    mov edx, 0x534D4150
+    mov edx, 0x534D4150 ; Magic number
     mov eax, 0xE820
     mov ecx, 24
     int 0x15

@@ -32,7 +32,7 @@ full_kernel.bin: kernel_entry.o interrupt_asm.o ${C_OBJ}
 
 %.o : $(KERNEL)/%.c ${HEADERS}
 	${TARGET}-gcc -ffreestanding -m32 -g -c $< -o $@
-	
+
 %.o : $(DRIVERS)/%.c ${HEADERS}
 	${TARGET}-gcc -ffreestanding -m32 -g -c $< -o $@
 
