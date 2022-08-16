@@ -7,6 +7,9 @@ KERNEL_LOCATION equ 0x1000
 CODE_SEG equ gdt_code - gdt_start
 DATA_SEG equ gdt_data - gdt_start
 
+MMAP_LOCATION equ 0x8004
+MMAP_ENTRY_COUNT_LOCATION equ 0x9000
+
 mov [BOOT_DRIVE], dl
 
 ; Initialize segment registers
@@ -19,20 +22,39 @@ mov es, ax
 mov bp, 0x8000
 mov sp, bp
 
-; Load kernel
-mov dl, [BOOT_DRIVE]    ; Select drive
-mov dh, 20              ; Number of sectors to read
-mov bx, KERNEL_LOCATION ; Buffer pointer
-
-call bios_disk_load
-
-; Clear screen by changing to graphics mode 
+; Clear screen by changing to graphics mode
 ; and changing back to text mode
 mov ah, 0
 mov al, 0
 int 0x10
 mov al, 3
 int 0x10
+
+; Load kernel
+; TODO: Error handling
+mov dl, [BOOT_DRIVE]    ; Select drive
+mov dh, 20              ; Number of sectors to read
+mov bx, KERNEL_LOCATION ; Buffer pointer
+
+call bios_disk_load
+
+; Read memory map
+mov di, MMAP_LOCATION
+call bios_get_mmap
+mov [MMAP_ENTRY_COUNT_LOCATION], ax
+
+cmp ax, 0
+jne boot_success
+
+boot_error:
+    mov bx, BOOT_ERROR_MSG
+    call bios_print_string
+
+error_loop:
+    hlt
+    jmp error_loop
+
+boot_success:
 
 cli ; Disable interrups
 lgdt [gdt_descriptor] ; Load GDT
@@ -65,8 +87,12 @@ jmp KERNEL_LOCATION
 %include "boot/bios_utils.asm"
 
 ; Data
+[bits 16]
+BOOT_ERROR_MSG: db "Something went wrong. Boot failed!", 0
+
 BOOT_DRIVE: db 0
 
+[bits 32]
 ; GDT setup
 gdt_start:
     ; Null descriptor
@@ -80,7 +106,7 @@ gdt_code:
     db 10011010b    ; Access byte
     db 11001111b    ; Flags and Limit (bits 16-19)
     db 0            ; Base (bits 24-31)
-    
+
 gdt_data:
     dw 0xffff       ; Limit (bits 0-15)
     dw 0            ; Base (bits 0-15)

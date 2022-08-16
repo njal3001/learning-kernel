@@ -1,18 +1,18 @@
 #include "vga_text.h"
-#include "../utils/mem.h"
+#include "../memory/mem.h"
 #include "../utils/math.h"
 #include "io_port.h"
 
 #define VMA 0xb8000
 
-size_t x = 0; 
-size_t y = 0; 
+size_t x = 0;
+size_t y = 0;
 uint16_t *buffer = (uint16_t*)VMA;
 uint8_t color = VGA_COLOR_WHITE;
 
 static inline uint16_t vga_entry(char ch, uint8_t color)
 {
-    return ((uint16_t) ch) | ((uint16_t)(color << 8)); 
+    return ((uint16_t) ch) | ((uint16_t)(color << 8));
 }
 
 void vga_clear()
@@ -32,10 +32,10 @@ void vga_writechar(char c)
     }
     else
     {
-        size_t i = x + y * VGA_WIDTH; 
+        size_t i = x + y * VGA_WIDTH;
         buffer[i] = vga_entry(c, color);
 
-        if (++x == VGA_WIDTH) 
+        if (++x == VGA_WIDTH)
         {
             x = 0;
             y++;
@@ -95,7 +95,7 @@ void vga_writeint(int val, enum  num_format format)
             break;
         default:
             // TODO: Throw error
-           break; 
+           break;
     }
 
     if (val < 0)
@@ -154,7 +154,7 @@ void vga_scrolldown(size_t amount)
     // Number of rows to move
     size_t mov_rows = max(VGA_HEIGHT - amount, 0);
 
-    // Move lower part of buffer  
+    // Move lower part of buffer
     if (mov_rows)
     {
         size_t i = amount * VGA_WIDTH;
@@ -176,8 +176,8 @@ void vga_enablecursor(uint8_t start, uint8_t end)
 {
     outb(0x3D4, 0x0A);
     outb(0x3D5, start);
- 
-	outb(0x3D4, 0x0B);
+
+    outb(0x3D4, 0x0B);
 	outb(0x3D5, end);
 }
 

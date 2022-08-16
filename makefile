@@ -1,13 +1,13 @@
 KERNEL := kernel
 DRIVERS := drivers
 BOOT := boot
+MEMORY := memory
 UTILS := utils
 
 TARGET := i686-elf
 
-C_SRC = $(wildcard ${KERNEL}/*.c ${DRIVERS}/*.c ${UTILS}/*.c)
-UTILS_HEADERS = $(wildcard ${UTILS}/*.h)
-HEADERS = ${UTILS_HEADERS} $(wildcard ${KERNEL}/*.h ${DRIVERS}/*.h)
+C_SRC = $(wildcard ${KERNEL}/*.c ${DRIVERS}/*.c ${UTILS}/*.c ${MEMORY}/*.c)
+HEADERS = $(wildcard ${KERNEL}/*.h ${DRIVERS}/*.h ${UTILS}/*.h ${MEMORY}/*.h)
 
 C_FILE = $(notdir $(C_SRC))
 C_OBJ = ${C_FILE:.c=.o}
@@ -26,13 +26,17 @@ pixelos.bin: everything.bin zeroes.bin
 everything.bin: boot_sect.bin full_kernel.bin
 	cat $^ > $@
 
+# TODO: Don't allow access to all headers from everywhere
 full_kernel.bin: kernel_entry.o interrupt_asm.o ${C_OBJ}
 	${TARGET}-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
 %.o : $(KERNEL)/%.c ${HEADERS}
 	${TARGET}-gcc -ffreestanding -m32 -g -c $< -o $@
 	
-%.o : $(DRIVERS)/%.c ${UTILS_HEADERS}
+%.o : $(DRIVERS)/%.c ${HEADERS}
+	${TARGET}-gcc -ffreestanding -m32 -g -c $< -o $@
+
+%.o : $(MEMORY)/%.c
 	${TARGET}-gcc -ffreestanding -m32 -g -c $< -o $@
 
 %.o : $(UTILS)/%.c
